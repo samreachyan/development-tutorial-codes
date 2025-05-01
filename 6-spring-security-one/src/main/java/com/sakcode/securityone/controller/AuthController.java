@@ -5,15 +5,16 @@ import com.sakcode.securityone.entity.User;
 import com.sakcode.securityone.handler.TokenRefreshException;
 import com.sakcode.securityone.repository.UserRepository;
 import com.sakcode.securityone.service.RefreshTokenService;
+import com.sakcode.securityone.service.TokenBlacklistService;
 import com.sakcode.securityone.service.UserDetailsImpl;
 import com.sakcode.securityone.service.UserService;
 import com.sakcode.securityone.util.JwtUtil;
-import dto.request.LoginRequest;
-import dto.request.RefreshTokenRequest;
-import dto.request.RegisterRequest;
-import dto.response.JwtResponse;
-import dto.response.MessageResponse;
-import dto.response.RefreshTokenResponse;
+import com.sakcode.securityone.dto.request.LoginRequest;
+import com.sakcode.securityone.dto.request.RefreshTokenRequest;
+import com.sakcode.securityone.dto.request.RegisterRequest;
+import com.sakcode.securityone.dto.response.JwtResponse;
+import com.sakcode.securityone.dto.response.MessageResponse;
+import com.sakcode.securityone.dto.response.RefreshTokenResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -35,6 +35,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -88,9 +89,18 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser() {
+    public ResponseEntity<?> logoutUser(@RequestHeader("Authorization") String authHeader) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        // Invalidate refresh token
         refreshTokenService.deleteByUserId(userDetails.getId());
+        
+        // Invalidate JWT token
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String jwt = authHeader.substring(7);
+            tokenBlacklistService.blacklistToken(jwt);
+        }
+
         return ResponseEntity.ok(new MessageResponse("Log out successful!"));
     }
 }

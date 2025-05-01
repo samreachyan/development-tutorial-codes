@@ -1,4 +1,4 @@
-package dto.response;
+package com.sakcode.securityone.dto.response;
 
 
 public class MessageResponse {

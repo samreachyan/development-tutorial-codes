@@ -1,4 +1,4 @@
-package dto.request;
+package com.sakcode.securityone.dto.request;
 
 import lombok.Data;
 

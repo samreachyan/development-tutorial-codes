@@ -2,6 +2,8 @@ package com.sakcode.securityone.service;
 
 
 import com.sakcode.securityone.entity.RefreshToken;
+import com.sakcode.securityone.entity.User;
+import com.sakcode.securityone.handler.ResourceNotFoundException;
 import com.sakcode.securityone.handler.TokenRefreshException;
 import com.sakcode.securityone.repository.RefreshTokenRepository;
 import com.sakcode.securityone.repository.UserRepository;
@@ -27,15 +29,21 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByToken(token);
     }
 
+    @Transactional
     public RefreshToken createRefreshToken(Long userId) {
-        RefreshToken refreshToken = new RefreshToken();
+        User user = userRepository.findById(userId).orElseThrow(() -> 
+            new ResourceNotFoundException("User not found with id: " + userId));
 
-        refreshToken.setUser(userRepository.findById(userId).get());
+        // Delete any existing token and flush immediately
+        refreshTokenRepository.deleteByUser(user);
+        refreshTokenRepository.flush();
+
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setUser(user);
         refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
         refreshToken.setToken(UUID.randomUUID().toString());
 
-        refreshToken = refreshTokenRepository.save(refreshToken);
-        return refreshToken;
+        return refreshTokenRepository.save(refreshToken);
     }
 
     public RefreshToken verifyExpiration(RefreshToken token) {
