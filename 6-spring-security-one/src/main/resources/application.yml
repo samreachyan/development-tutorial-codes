@@ -16,7 +16,8 @@ spring:
     name: spring-security-one
 
 jwt:
-  secret: yourSecretKeyForJWTSigningMustBeAtLeast64CharactersLong1234567890abcdefghijklmnopqrstuvwxyz
+  # length must >= 32
+  secret: yourSecretKeyForJWTSyourSecretKeyForJWTSyourSecretKeyForJWTSyourSecretKeyForJWTSyourSecretKeyForJWTS
   expirationMs: 86400000 # 24 hours
   refreshExpirationMs: 604800000 # 7 days
 

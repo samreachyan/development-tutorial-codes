@@ -30,7 +30,7 @@ public class SecurityConfig {
                         authorize.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/test/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/test/user/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/api/test/admin/**").hasAnyRole("ADMIN")
+                                .requestMatchers("/api/test/all/**").hasAnyRole("USER", "ADMIN")
                                 .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

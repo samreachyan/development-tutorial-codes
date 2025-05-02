@@ -37,9 +37,9 @@ public class UserService implements UserDetailsService {
         }
 
         // Validate password strength
-        if (password == null || password.length() < 8) {
-            throw new InvalidDataException("Password must be at least 8 characters long");
-        }
+        // if (password == null || password.length() < 8) {
+        //     throw new InvalidDataException("Password must be at least 8 characters long");
+        // }
 
         // Validate email format
         if (!isValidEmail(email)) {
