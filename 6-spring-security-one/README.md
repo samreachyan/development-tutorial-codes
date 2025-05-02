@@ -97,9 +97,7 @@ public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest login
     "token": "JWT_TOKEN",
     "refreshToken": "REFRESH_TOKEN",
     "id": 1,
-    "username": "user",
-    "email": "user@example.com",
-    "roles": ["ROLE_USER"]
+    "username": "user"
   }
   ```
 

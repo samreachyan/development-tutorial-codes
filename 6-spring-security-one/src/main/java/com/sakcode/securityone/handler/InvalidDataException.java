@@ -3,9 +3,9 @@ package com.sakcode.securityone.handler;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String message) {
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class InvalidDataException extends RuntimeException {
+    public InvalidDataException(String message) {
         super(message);
     }
 }

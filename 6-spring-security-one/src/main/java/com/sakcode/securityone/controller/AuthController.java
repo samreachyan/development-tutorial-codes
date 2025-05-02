@@ -17,6 +17,8 @@ import com.sakcode.securityone.dto.response.MessageResponse;
 import com.sakcode.securityone.dto.response.RefreshTokenResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,11 +26,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
-
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
@@ -69,7 +70,9 @@ public class AuthController {
         User user = userService.registerUser(
                 registerRequest.getUsername(),
                 registerRequest.getPassword(),
-                Set.of("USER"));
+                registerRequest.getEmail(),
+                registerRequest.getRole());
+        log.info("User created for {} - {}", user.getEmail(), user.getUsername());
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

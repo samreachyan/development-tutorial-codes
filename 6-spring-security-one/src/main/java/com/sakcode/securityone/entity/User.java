@@ -29,6 +29,9 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private boolean enabled = true;
 
     @ElementCollection(fetch = FetchType.EAGER)
