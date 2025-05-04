@@ -1,6 +1,6 @@
 package com.sakcode.securityone.controller;
 
-import com.sakcode.securityone.dto.MfaSetupResponse;
+import com.sakcode.securityone.dto.response.MfaSetupResponse;
 import com.sakcode.securityone.service.MfaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

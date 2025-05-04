@@ -23,13 +23,17 @@ import java.util.Base64;
 @Service
 @RequiredArgsConstructor
 public class MfaService {
-    private final MfaSettingsRepository mfaSettingsRepository;
+    protected final MfaSettingsRepository mfaSettingsRepository;
     private final UserRepository userRepository;
     private final SecretGenerator secretGenerator = new DefaultSecretGenerator(20);
     private final TimeProvider timeProvider = new SystemTimeProvider();
     private final CodeGenerator codeGenerator = new DefaultCodeGenerator();
     private final CodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
     private final QrGenerator qrGenerator = new ZxingPngQrGenerator();
+
+    public MfaSettings findByUserId(Long userId) {
+        return mfaSettingsRepository.findByUserId(userId);
+    }
 
     @Transactional
     public MfaSettings setupMfa(String username) {

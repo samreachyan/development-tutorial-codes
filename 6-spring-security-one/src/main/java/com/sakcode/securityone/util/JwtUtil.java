@@ -1,7 +1,6 @@
 package com.sakcode.securityone.util;
 
 import com.sakcode.securityone.config.JwtConfig;
-import com.sakcode.securityone.entity.User;
 import com.sakcode.securityone.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
