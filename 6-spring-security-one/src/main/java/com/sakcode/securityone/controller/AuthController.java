@@ -16,6 +16,7 @@ import com.sakcode.securityone.service.*;
 import com.sakcode.securityone.repository.MfaSessionRepository;
 import com.sakcode.securityone.repository.UserRepository;
 import com.sakcode.securityone.util.JwtUtil;
+import com.sakcode.securityone.service.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -118,7 +119,12 @@ public class AuthController {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        // Load user details
+        UserDetailsImpl userDetails = (UserDetailsImpl) userService.loadUserByUsername(username);
+        
+        // Create authentication token
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+            userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Generate JWT token
